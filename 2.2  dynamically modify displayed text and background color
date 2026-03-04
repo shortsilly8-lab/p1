@@ -22,13 +22,13 @@ Step3: Open:
 res → values → strings.xml 
 strings.xml 
         <resources> 
-        <string name="app_name">ResourceDemoApp</string> 
-        <!-- Text shown on screen --> 
-        <string name="light_mode_text">Welcome to Resource Demo</string> 
-        <string name="dark_mode_text">Dark Mode Activated</string> 
-        <!-- Button labels --> 
-        <string name="btn_dark">Switch to Dark Mode</string> 
-        <string name="btn_light">Switch to Light Mode</string> 
+		        <string name="app_name">ResourceDemoApp</string> 
+		        <!-- Text shown on screen --> 
+		        <string name="light_mode_text">Welcome to Resource Demo</string> 
+		        <string name="dark_mode_text">Dark Mode Activated</string> 
+		        <!-- Button labels --> 
+		        <string name="btn_dark">Switch to Dark Mode</string> 
+		        <string name="btn_light">Switch to Light Mode</string> 
         </resources> 
 
 Step:04 
