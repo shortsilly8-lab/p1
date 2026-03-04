@@ -1,0 +1,66 @@
+Practical 4.2 
+Aim: To design a simple login screen using Relative Layout and understand positioning of views relative to parent and other views. 
+Problem Statement Create an Android application to design a Login Screen using Relative Layout with Username, Password, and Login Button positioned relative to each other. 
+
+Project Name: LoginRelativeLayout 
+
+activity_main.xml
+          <?xml version="1.0" encoding="utf-8"?> 
+          <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+              android:id="@+id/main" 
+              android:layout_width="match_parent" 
+              android:layout_height="match_parent" 
+              android:padding="20dp"> 
+              <!-- Title --> 
+              <TextView 
+                  android:id="@+id/txtTitle" 
+                  android:layout_width="wrap_content" 
+                  android:layout_height="wrap_content" 
+                  android:text="Login" 
+                  android:textSize="24sp" 
+                  android:textStyle="bold" 
+                  android:layout_centerHorizontal="true" /> 
+              <!-- Username --> 
+              <EditText 
+                  android:id="@+id/edtUsername" 
+                  android:layout_width="match_parent" 
+                  android:layout_height="wrap_content" 
+                  android:hint="Username" 
+                  android:layout_below="@id/txtTitle" 
+                  android:layout_marginTop="20dp" /> 
+              <!-- Password --> 
+              <EditText 
+                  android:id="@+id/edtPassword" 
+                  android:layout_width="match_parent" 
+                  android:layout_height="wrap_content" 
+                  android:hint="Password" 
+                  android:inputType="textPassword" 
+                  android:layout_below="@id/edtUsername" 
+                  android:layout_marginTop="10dp" /> 
+              <!-- Login Button --> 
+              <Button 
+                  android:id="@+id/btnLogin" 
+                  android:layout_width="wrap_content" 
+                  android:layout_height="wrap_content" 
+                  android:text="Login" 
+                  android:layout_below="@id/edtPassword" 
+                  android:layout_centerHorizontal="true" 
+                  android:layout_marginTop="20dp" /> 
+          </RelativeLayout> 
+
+          
+MainActivity.java - no changes
+    package com.example.loginrelativelayout; 
+     
+    import android.os.Bundle; 
+    import androidx.appcompat.app.AppCompatActivity; 
+     
+    public class MainActivity extends AppCompatActivity { 
+     
+        @Override 
+        protected void onCreate(Bundle savedInstanceState) { 
+            super.onCreate(savedInstanceState); 
+            setContentView(R.layout.activity_main); 
+        } 
+    } 
+Run
