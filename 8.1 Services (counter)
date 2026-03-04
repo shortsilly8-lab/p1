@@ -1,0 +1,155 @@
+Practical:8.1: Services 
+Aim-To study and implement an Android Service that performs a background task (such as a counter or timer) without direct user interaction. 
+Problem Statement – Develop an Android application that implements a Started Service which runs a background counter (or timer) and logs the count every second using Logcat. 
+The service should: Start when a button is clicked. Continue running even when the activity is minimized. Stop when a stop button is pressed. 
+Display output in Logcat or Toast messages for verification. 
+
+STEP 1: Create Project-Open Android Studio 
+        Click New Project 
+         Select: Empty Views Activity 
+        Click Next 
+        Configure Project 
+        Field Value 
+        Name StartedServiceCounter 
+        Package Name com.example.startedservicecounter 
+        Language Java 
+        Minimum SDK API 21 (or default) 
+        Click Finish 
+        Wait for Gradle sync. 
+STEP 2: Create Service Class 
+       Right Click on: 
+      app > java > com.example.startedservicecounter 
+      New → Java Class 
+      Name it: CounterService
+
+STEP 3: Write 
+CounterService.java 
+        package com.example.startedservicecounter; 
+        import android.app.Service; 
+        import android.content.Intent; 
+        import android.os.Handler; 
+        import android.os.IBinder; 
+        import android.util.Log; 
+        import android.widget.Toast; 
+        public class CounterService extends Service { 
+            private Handler handler; 
+            private Runnable runnable; 
+            private int counter = 0; 
+            private boolean isRunning = false;    
+            @Override 
+            public int onStartCommand(Intent intent, int flags, int startId) { 
+                if (isRunning) { 
+                    Log.d("CounterService", "Service already running"); 
+                    return START_STICKY; 
+                } 
+                isRunning = true; 
+                handler = new Handler(); 
+                runnable = new Runnable() { 
+                    @Override 
+                    public void run() { 
+                        counter++; 
+                        Log.d("CounterService", "Counter: " + counter); 
+                        handler.postDelayed(this, 1000); 
+                    } 
+                }; 
+                handler.post(runnable); 
+                Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show(); 
+                return START_STICKY; 
+            } 
+            @Override 
+            public void onDestroy() { 
+                super.onDestroy(); 
+         
+                if (handler != null && runnable != null) { 
+                    handler.removeCallbacks(runnable); 
+                } 
+                isRunning = false; 
+                counter = 0; 
+                Toast.makeText(this, "Service Stopped", Toast.LENGTH_SHORT).show(); 
+                Log.d("CounterService", "Service Destroyed"); 
+            } 
+            @Override 
+            public IBinder onBind(Intent intent) { 
+                return null; 
+            } 
+        } 
+
+STEP 4: Register Service in AndroidManifest.xml 
+AndroidManifest.xml 
+Inside <application> tag add this: 
+<service 
+    android:name=".CounterService" 
+    android:enabled="true" 
+    android:exported="false"/> 
+ 
+STEP 5: Design Layout 
+activity_main.xml 
+        <?xml version="1.0" encoding="utf-8"?> 
+        <LinearLayout 
+            xmlns:android="http://schemas.android.com/apk/res/android" 
+            android:layout_width="match_parent" 
+            android:layout_height="match_parent" 
+            android:orientation="vertical" 
+            android:gravity="center" 
+            android:padding="20dp"> 
+            <Button 
+                android:id="@+id/btnStart" 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:text="Start Service"/> 
+            <Button 
+                android:id="@+id/btnStop" 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:text="Stop Service" 
+                android:layout_marginTop="20dp"/> 
+        </LinearLayout> 
+
+STEP 6: Write MainActivity.java 
+MainActivity.java 
+              package com.example.startedservicecounter; 
+              import android.content.Intent; 
+              import android.os.Bundle; 
+              import android.view.View; 
+              import android.widget.Button; 
+              import androidx.appcompat.app.AppCompatActivity; 
+              public class MainActivity extends AppCompatActivity { 
+                  Button btnStart, btnStop; 
+                  @Override 
+                  protected void onCreate(Bundle savedInstanceState) { 
+                      super.onCreate(savedInstanceState); 
+                      setContentView(R.layout.activity_main); 
+               
+                      btnStart = findViewById(R.id.btnStart); 
+                      btnStop = findViewById(R.id.btnStop); 
+                      btnStart.setOnClickListener(new View.OnClickListener() { 
+                          @Override 
+                          public void onClick(View view) { 
+                              Intent intent = new Intent(MainActivity.this, CounterService.class); 
+                              startService(intent); 
+                          } 
+                      }); 
+                      btnStop.setOnClickListener(new View.OnClickListener() { 
+                          @Override 
+                          public void onClick(View view) { 
+                              Intent intent = new Intent(MainActivity.this, CounterService.class); 
+                              stopService(intent); 
+                          } 
+              }); 
+              } 
+              } 
+
+STEP 7: Run the App 
+What Should Happen? 
+Click Start Service 
+Counter starts in Logcat 
+Toast appears 
+Minimize app 
+Service keeps running (check Logcat) 
+Click Stop Service 
+Counter stops 
+“Service Stopped” Toast 
+How to See Logcat 
+Bottom → Logcat 
+Filter by:CounterService 
+You’ll see: Counter: 1,Counter: 2,Counter: 3 
