@@ -1,0 +1,248 @@
+Practical:09  Aim: To study database programming using SQLite in Android. 
+Problem Statement:Develop an Android application using SQLite database to create a table and perform insert, update, delete and display operations on the stored records. 
+
+What is SQLite? SQLite is a lightweight database built inside Android. 
+      No installation needed 
+      No internet required 
+      Works offline 
+      Data stored inside app 
+      
+What We Will Build 
+A simple Student Record App 
+Table: student 
+Columns: id (Primary Key), name, marks 
+Operations: Insert student Update student Delete student Display all students 
+
+STEP 1 — Create Project 
+        1. Open Android Studio 
+        2. Click New Project 
+        3. Select Empty Views Activity 
+        4. Click Next 
+        Project Details 
+        Field 
+        Value 
+        Name 
+        SQLiteDemo 
+        Language Java 
+        Min SDK 21 
+        Click Finish 
+        Wait for Gradle to build. 
+        
+STEP 2 — How SQLite Works in Android 
+        Android gives a helper class called: 
+        SQLiteOpenHelper 
+        We must create our own class extending this. 
+        This class:Creates database 
+        Creates table 
+        Handles version changes 
+        
+STEP 3 — Create DatabaseHelper Class 
+Right click: 
+app > java > yourpackage 
+New → Java Class 
+Name it: DatabaseHelper 
+
+DatabaseHelper.java 
+          package com.example.sqlitedemo; 
+          import android.content.ContentValues; 
+          import android.content.Context; 
+          import android.database.Cursor; 
+          import android.database.sqlite.SQLiteDatabase; 
+          import android.database.sqlite.SQLiteOpenHelper; 
+          public class DatabaseHelper extends SQLiteOpenHelper { 
+          public static final String DATABASE_NAME = "Student.db"; 
+              public static final String TABLE_NAME = "student"; 
+              public static final String COL_1 = "ID"; 
+              public static final String COL_2 = "NAME"; 
+              public static final String COL_3 = "MARKS"; 
+              public DatabaseHelper(Context context) { 
+                  super(context, DATABASE_NAME, null, 1); 
+              } 
+              @Override 
+              public void onCreate(SQLiteDatabase db) { 
+                  db.execSQL("CREATE TABLE " + TABLE_NAME + 
+                          " (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, MARKS INTEGER)"); 
+              } 
+              @Override 
+              public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { 
+                  db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME); 
+                  onCreate(db); 
+              } 
+              public boolean insertData(String name, String marks) { 
+                  SQLiteDatabase db = this.getWritableDatabase(); 
+                  ContentValues contentValues = new ContentValues(); 
+                  contentValues.put(COL_2, name); 
+                  contentValues.put(COL_3, marks); 
+                  long result = db.insert(TABLE_NAME, null, contentValues); 
+                  return result != -1; 
+              } 
+              public Cursor getAllData() { 
+                  SQLiteDatabase db = this.getWritableDatabase(); 
+                  return db.rawQuery("SELECT * FROM " + TABLE_NAME, null); 
+              } 
+              public boolean updateData(String id, String name, String marks) { 
+                  SQLiteDatabase db = this.getWritableDatabase(); 
+                  ContentValues contentValues = new ContentValues(); 
+                  contentValues.put(COL_1, id); 
+                  contentValues.put(COL_2, name); 
+                  contentValues.put(COL_3, marks); 
+                  db.update(TABLE_NAME, contentValues, "ID = ?", new String[]{id}); 
+                  return true; 
+              } 
+              public Integer deleteData(String id) { 
+                  SQLiteDatabase db = this.getWritableDatabase(); 
+                  return db.delete(TABLE_NAME, "ID = ?", new String[]{id}); 
+              } 
+          } 
+ 
+STEP 4 — Design Layout  
+activity_main.xml
+        <?xml version="1.0" encoding="utf-8"?> 
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+            android:layout_width="match_parent" 
+            android:layout_height="match_parent"> 
+            <LinearLayout 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:orientation="vertical" 
+                android:padding="20dp"> 
+                <EditText 
+                    android:id="@+id/editId" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:hint="Enter ID" /> 
+                <EditText 
+                    android:id="@+id/editName" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:hint="Enter Name" /> 
+                <EditText 
+                    android:id="@+id/editMarks" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:hint="Enter Marks" /> 
+                <Button 
+                    android:id="@+id/btnAdd" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:text="Insert" /> 
+         
+                <Button 
+                    android:id="@+id/btnView" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:text="View All" /> 
+                <Button 
+                    android:id="@+id/btnUpdate" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:text="Update" /> 
+                <Button 
+                    android:id="@+id/btnDelete" 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:text="Delete" /> 
+            </LinearLayout> 
+        </ScrollView> 
+        
+MainActivity.java 
+              package com.example.sqlitedemo; 
+              import androidx.appcompat.app.AppCompatActivity; 
+              import android.database.Cursor; 
+              import android.os.Bundle; 
+              import android.view.View; 
+              import android.widget.Button; 
+              import android.widget.EditText; 
+              import android.widget.Toast; 
+              public class MainActivity extends AppCompatActivity { 
+                  DatabaseHelper myDb; 
+                  EditText editName, editMarks, editId; 
+                  Button btnAddData, btnViewAll, btnUpdate, btnDelete; 
+                  @Override 
+                  protected void onCreate(Bundle savedInstanceState) { 
+                      super.onCreate(savedInstanceState); 
+                      setContentView(R.layout.activity_main); 
+                      myDb = new DatabaseHelper(this); 
+                      editId = findViewById(R.id.editId); 
+                      editName = findViewById(R.id.editName); 
+                      editMarks = findViewById(R.id.editMarks); 
+                      btnAddData = findViewById(R.id.btnAdd); 
+                      btnViewAll = findViewById(R.id.btnView); 
+                      btnUpdate = findViewById(R.id.btnUpdate); 
+                      btnDelete = findViewById(R.id.btnDelete); 
+                      AddData(); 
+                      viewAll(); 
+                      UpdateData(); 
+                      DeleteData(); 
+                  } 
+                  public void AddData() { 
+                      btnAddData.setOnClickListener(v -> { 
+                          boolean isInserted = myDb.insertData( 
+                                  editName.getText().toString(), 
+                                  editMarks.getText().toString() 
+                          ); 
+                          if (isInserted) 
+                              Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show(); 
+                          else 
+                              Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_LONG).show(); 
+                      }); 
+                  } 
+               
+                  public void viewAll() { 
+                      btnViewAll.setOnClickListener(v -> { 
+                          Cursor res = myDb.getAllData(); 
+                          if (res.getCount() == 0) { 
+                              Toast.makeText(MainActivity.this, "No Data Found", Toast.LENGTH_LONG).show(); 
+                              return; 
+                          } 
+                          StringBuffer buffer = new StringBuffer(); 
+                          while (res.moveToNext()) { 
+                              buffer.append("ID :" + res.getString(0) + "\n"); 
+                              buffer.append("Name :" + res.getString(1) + "\n"); 
+                              buffer.append("Marks :" + res.getString(2) + "\n\n"); 
+                          } 
+                          Toast.makeText(MainActivity.this, buffer.toString(), Toast.LENGTH_LONG).show(); 
+                      }); 
+                  } 
+                  public void UpdateData() { 
+                      btnUpdate.setOnClickListener(v -> { 
+                          boolean isUpdate = myDb.updateData( 
+                                  editId.getText().toString(), 
+                                  editName.getText().toString(), 
+                                  editMarks.getText().toString() 
+                          ); 
+                          if (isUpdate) 
+                              Toast.makeText(MainActivity.this, "Data Updated", Toast.LENGTH_LONG).show(); 
+                          else 
+                              Toast.makeText(MainActivity.this, "Data Not Updated", Toast.LENGTH_LONG).show(); 
+                      }); 
+                  } 
+                  public void DeleteData() { 
+                      btnDelete.setOnClickListener(v -> { 
+                          Integer deletedRows = myDb.deleteData(editId.getText().toString()); 
+                          if (deletedRows > 0) 
+                              Toast.makeText(MainActivity.this, "Data Deleted", Toast.LENGTH_LONG).show(); 
+                          else 
+                              Toast.makeText(MainActivity.this, "Data Not Deleted", Toast.LENGTH_LONG).show(); 
+                      }); 
+                  } 
+              } 
+              
+Run The App 
+Test: 
+Insert → Enter name & marks 
+View → Shows all records 
+Update → Enter ID + new values 
+Delete → Enter ID 
+Concept Meaning 
+SQLiteOpenHelper Manages database 
+onCreate() 
+Creates table 
+insert() 
+Adds data 
+rawQuery() 
+Reads data 
+update() 
+Modifies data 
+delete() 
+Removes data
