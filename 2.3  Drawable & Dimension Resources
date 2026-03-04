@@ -1,0 +1,98 @@
+PRACTICAL2.3 : Drawable & Dimension Resources (TCSC) 
+STEP 1: Open Android Studio 
+      • Click New Project 
+      
+STEP 2: Select Project Template 
+      • Choose Empty Views Activity 
+      • Click Next 
+      
+STEP 3: Configure Your Project 
+        Fill exactly like this: 
+        Field 
+        Name 
+        Package name 
+        Save location 
+        Language 
+        Minimum SDK 
+        Value 
+        CollegeNoticeApp 
+        com.example.collegenoticeapp 
+        Default 
+        Java 
+        API 21 (Android 5.0) 
+        Build configuration language Default 
+        Click Finish 
+        Wait until Gradle build completes. 
+        
+STEP 4: Add Image (Drawable Resource) 
+        1. Copy your image logo.jpg 
+        2. Go to: 
+        app → src → main → res → drawable 
+        3. Paste logo.jpg inside drawable 
+        No renaming required 
+        
+STEP 5: Create Dimension Resources 
+        Open: 
+        res → values → dimens.xml 
+        If not present: 
+        • Right-click values 
+        • New → Values Resource File 
+        • Name: dimens 
+dimens.xml
+          <?xml version="1.0" encoding="utf-8"?> 
+          <resources> 
+              <dimen name="logo_size">120dp</dimen> 
+              <dimen name="padding_large">16dp</dimen> 
+              <dimen name="padding_medium">12dp</dimen> 
+              <dimen name="text_large">20sp</dimen> 
+              <dimen name="text_medium">16sp</dimen> 
+          </resources> 
+          
+STEP 6: Edit Layout File  
+
+activity_main.xml     
+            <?xml version="1.0" encoding="utf-8"?> 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+                android:layout_width="match_parent" 
+                android:layout_height="match_parent" 
+                android:orientation="vertical" 
+                android:gravity="center" 
+                android:padding="@dimen/padding_large"> 
+             
+                <ImageView 
+                    android:layout_width="@dimen/logo_size" 
+                    android:layout_height="@dimen/logo_size" 
+                    android:src="@drawable/logo" 
+                    android:contentDescription="College Logo" 
+                    android:layout_marginBottom="@dimen/padding_medium" /> 
+             
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="TCSC" 
+                    android:textSize="@dimen/text_large" 
+                    android:layout_marginBottom="@dimen/padding_medium" /> 
+             
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="College Notice Board" 
+                    android:textSize="@dimen/text_medium" /> 
+            </LinearLayout> 
+            
+STEP 7: Java File 
+MainActivity.java    Default code is sufficient: 
+
+package com.example.collegenoticeapp; 
+import android.os.Bundle; 
+import androidx.appcompat.app.AppCompatActivity; 
+public class MainActivity extends AppCompatActivity { 
+    @Override 
+    protected void onCreate(Bundle savedInstanceState) { 
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_main); 
+    } 
+} 
+
+STEP 8: Run the Application 
+1. Click Run 
