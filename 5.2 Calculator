@@ -1,5 +1,8 @@
-Prac:5.2 Aim To design and develop an Android Calculator Application that demonstrates the effective use of AppBar, Fragments, and basic UI components. The application aims to perform basic arithmetic operations based on user input handled within a fragment, while maintaining a consistent AppBar across the application interface to ensure a structured and user-friendly design.
-Problem Statement Design and develop an Android Calculator Application that demonstrates the use of AppBar, Fragments, and basic UI components. The application should perform arithmetic operations using user input handled inside a fragment, while maintaining a consistent AppBar across the application.
+Prac:5.2 (activity, fragment_calc, calc.java, 
+Aim To design and develop an Android Calculator Application that demonstrates the effective use of AppBar, Fragments, and basic UI components. The application aims to perform basic 
+arithmetic operations based on user input handled within a fragment, while maintaining a consistent AppBar across the application interface to ensure a structured and user-friendly design.
+Problem Statement Design and develop an Android Calculator Application that demonstrates the use of AppBar, Fragments, and basic UI components. The application should perform arithmetic 
+operations using user input handled inside a fragment, while maintaining a consistent AppBar across the application.
 Project Details
 Project Name: FragmentCalculatorApp
 
