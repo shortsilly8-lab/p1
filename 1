@@ -37,7 +37,6 @@ activity_main.xml
                        android:text="Student Name" 
                        android:textStyle="bold" 
                        android:paddingTop="8dp"/> 
-            
                    <EditText 
                        android:id="@+id/etName" 
                        android:layout_width="match_parent" 
@@ -136,7 +135,7 @@ activity_profile.xml
                 android:padding="8dp"/> 
         </LinearLayout> 
         
-Code (ProfileActivity.java) 
+ProfileActivity.java
         package com.example.studentprofileviewer; 
         import android.content.Intent; 
         import android.os.Bundle; 
@@ -181,40 +180,31 @@ Procedure
 
 LoggingService.java
        package com.example.studentprofileviewer; 
-        
        import android.app.Service; 
        import android.content.Intent; 
        import android.os.IBinder; 
        import android.util.Log; 
-        
        public class LoggingService extends Service { 
-        
            private static final String TAG = "LoggingService"; 
-        
            @Override 
            public void onCreate() { 
                super.onCreate(); 
                Log.d(TAG, "Service Created"); 
            } 
-        
            @Override 
            public int onStartCommand(Intent intent, int flags, int startId) { 
                // Get data passed from ProfileActivity 
                String name = intent.getStringExtra("NAME"); 
                String roll = intent.getStringExtra("ROLL"); 
-        
                Log.d(TAG, "Profile Viewed: " + name + " (Roll: " + roll + ")"); 
-        
                // Service runs once and stops (not sticky) 
                return START_NOT_STICKY; 
            } 
-        
            @Override 
            public void onDestroy() { 
                super.onDestroy(); 
                Log.d(TAG, "Service Destroyed"); 
            } 
-        
            @Override 
            public IBinder onBind(Intent intent) { 
                // Not using bound service here 
@@ -230,23 +220,18 @@ MainActivity.java
         import android.widget.Button; 
         import android.widget.EditText; 
         import androidx.appcompat.app.AppCompatActivity; 
-         
         public class MainActivity extends AppCompatActivity { 
-         
             EditText etName, etRoll, etCourse, etEmail; 
             Button btnViewProfile; 
-         
             @Override 
             protected void onCreate(Bundle savedInstanceState) { 
                 super.onCreate(savedInstanceState); 
                 setContentView(R.layout.activity_main); 
-         
                 etName = findViewById(R.id.etName); 
                 etRoll = findViewById(R.id.etRoll); 
                 etCourse = findViewById(R.id.etCourse); 
                 etEmail = findViewById(R.id.etEmail); 
                 btnViewProfile = findViewById(R.id.btnViewProfile); 
-         
                 btnViewProfile.setOnClickListener(v -> { 
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class); 
                     intent.putExtra("NAME", etName.getText().toString()); 
