@@ -1,0 +1,134 @@
+Practical–3.2: Exploring Multiple Activities
+Aim To develop an Android application that demonstrates interaction between multiple activities by navigating between screens and presenting user-specific content dynamically.
+Problem Statement Design an Android application consisting of two activities where the first activity acts as a welcome screen to collect basic user input, and the second activity displays a personalized message based on the input received, demonstrating activity-to-activity communication.
+
+STEP 1: Create a New Android Project
+              Open Android Studio
+              •	Click New Project
+              Select Template
+              •	Choose Empty Views Activity
+              •	Click Next
+              Project Configuration 
+              •	Name:
+              WelcomeMessageApp
+              •	Language:
+              Java
+              •	Minimum SDK:
+              API 21 (Android 5.0)
+              •	Build configuration language:
+              Groovy (default)
+              Click Finish
+              Wait for Gradle sync to complete.
+              
+activity_mainXML
+              <?xml version="1.0" encoding="utf-8"?>
+              <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:gravity="center"
+                  android:padding="24dp">
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Welcome!"
+                      android:textSize="26sp"
+                      android:textStyle="bold"
+                      android:layout_marginBottom="20dp" />
+                  <EditText
+                      android:id="@+id/etName"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:hint="Enter your name"
+                      android:inputType="textPersonName"
+                      android:layout_marginBottom="16dp" />
+                  <Button
+                      android:id="@+id/btnNext"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Continue" />
+              </LinearLayout>
+              
+STEP 3: Create Second Activity (Display Screen)
+        Create New Activity
+        •	Right-click on java → com.example.multipleactivities
+        •	Select New → Activity → Empty Views Activity
+        Fill details exactly:
+                •	Activity Name: SecondActivity
+                •	Layout Name: activity_second
+                •	Language: Java
+                Click Finish
+
+Activity_second.xml
+            <?xml version="1.0" encoding="utf-8"?>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="24dp">
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hello User!"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            
+Second_activity.java
+              package com.example.welcomemessageapp;
+              import android.os.Bundle;
+              import android.widget.TextView;
+              import androidx.appcompat.app.AppCompatActivity;
+              public class SecondActivity extends AppCompatActivity {
+                  TextView tvMessage;
+                  @Override
+                  protected void onCreate(Bundle savedInstanceState) {
+                      super.onCreate(savedInstanceState);
+                      setContentView(R.layout.activity_second);
+                      // Link TextView
+                      tvMessage = findViewById(R.id.tvMessage);
+                      // Get data sent from MainActivity
+                      String name = getIntent().getStringExtra("username");
+                      // Display personalized message
+                      tvMessage.setText("Hello, " + name + "! Welcome to the App.");
+                  }
+              }
+              
+MainActivity.java
+          package com.example.welcomemessageapp;
+          import android.content.Intent;
+          import android.os.Bundle;
+          import android.view.View;
+          import android.widget.Button;
+          import android.widget.EditText;
+          import androidx.appcompat.app.AppCompatActivity;
+          public class MainActivity extends AppCompatActivity {
+              EditText etName;
+              Button btnNext;
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  setContentView(R.layout.activity_main);
+                  // Linking UI components with Java
+                  etName = findViewById(R.id.etName);
+                  btnNext = findViewById(R.id.btnNext);
+                  // Button click event
+                  btnNext.setOnClickListener(new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                          // Get user input
+                          String name = etName.getText().toString();
+                          // Create Intent to move to SecondActivity
+                          Intent intent = new Intent(MainActivity.this, com.example.welcomemessageapp.SecondActivity.class);
+                          // Pass data using Intent
+                          intent.putExtra("username", name);
+                          // Start second activity
+                          startActivity(intent);
+                      }
+                  });
+              }
+          }
+          
+Run the application
