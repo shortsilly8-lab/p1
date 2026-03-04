@@ -1,0 +1,110 @@
+Practical10 
+Aim: To study and implement security features and runtime permission handling in Android applications. 
+Problem Statement: Develop an Android application that requests Camera permission at runtime. When the user clicks a button, the application should: 
+Check whether the Camera permission is granted. If not granted, request the permission from the user. Display a message indicating whether the permission is granted or denied. 
+The application should handle permission approval and denial properly. 
+From Android 6.0 (Marshmallow) onwards, permissions like Camera, Location, etc. must be requested at runtime, not only in the Manifest. 
+There are 3 main steps in runtime permission handling: 
+Declare permission in AndroidManifest.xml 
+Check permission using ContextCompat.checkSelfPermission() 
+Request permission using ActivityCompat.requestPermissions() 
+Handle result inside onRequestPermissionsResult() 
+We will implement exactly this.
+
+Project Setup 
+Project Name: CameraPermissionApp 
+Language: Java 
+Template: Empty Views Activity 
+Minimum SDK: API 23 or above 
+
+1. AndroidManifest.xml 
+Add Camera permission inside <manifest> but outside <application>. 
+        <uses-permission android:name="android.permission.CAMERA"/> 
+        
+2. activity_main.xml 
+          <?xml version="1.0" encoding="utf-8"?> 
+          <LinearLayout 
+          xmlns:android="http://schemas.android.com/apk/res/android" 
+          android:layout_width="match_parent" 
+          android:layout_height="match_parent" 
+          android:gravity="center" 
+          android:orientation="vertical"> 
+          <Button 
+          android:id="@+id/btnCamera" 
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content" 
+          android:text="Request Camera Permission"/> 
+          </LinearLayout> 
+          
+3. MainActivity.java  
+              package com.example.camerapermissionapp; 
+              import android.Manifest; 
+              import android.content.pm.PackageManager; 
+              import android.os.Bundle; 
+              import android.widget.Button; 
+              import android.widget.Toast; 
+              import androidx.annotation.NonNull; 
+              import androidx.appcompat.app.AppCompatActivity; 
+              import androidx.core.app.ActivityCompat; 
+              import androidx.core.content.ContextCompat; 
+              public class MainActivity extends AppCompatActivity { 
+                  private static final int CAMERA_REQUEST_CODE = 100; 
+                  Button btnCamera; 
+                  @Override 
+                  protected void onCreate(Bundle savedInstanceState) { 
+                      super.onCreate(savedInstanceState); 
+                      setContentView(R.layout.activity_main); 
+                      btnCamera = findViewById(R.id.btnCamera); 
+                      btnCamera.setOnClickListener(v -> checkCameraPermission()); 
+                  } 
+                  private void checkCameraPermission() { 
+                      // Step 1: Check if permission already granted 
+                      if (ContextCompat.checkSelfPermission(this, 
+                              Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { 
+               
+                          Toast.makeText(this, 
+                                  "Camera Permission Already Granted", 
+                                  Toast.LENGTH_SHORT).show(); 
+                      } else { 
+                          // Step 2: Request permission 
+                          ActivityCompat.requestPermissions(this, 
+                                  new String[]{Manifest.permission.CAMERA}, 
+                                  CAMERA_REQUEST_CODE); 
+                      } 
+                  } 
+                  // Step 3: Handle user response 
+                  @Override 
+                  public void onRequestPermissionsResult(int requestCode, 
+                                                         @NonNull String[] permissions, 
+                                                         @NonNull int[] grantResults) { 
+                      super.onRequestPermissionsResult(requestCode, permissions, grantResults); 
+                      if (requestCode == CAMERA_REQUEST_CODE) { 
+                          if (grantResults.length > 0 
+                                  && grantResults[0] == PackageManager.PERMISSION_GRANTED) { 
+                              Toast.makeText(this, 
+                                      "Camera Permission Granted", 
+                                      Toast.LENGTH_SHORT).show(); 
+                          } else { 
+                              Toast.makeText(this, 
+                                      "Camera Permission Denied", 
+                                      Toast.LENGTH_SHORT).show(); 
+                          } 
+                      } 
+                  } 
+              } 
+              
+What happens when button is clicked? 
+checkCameraPermission() is called. 
+App checks: 
+If permission already granted → show message. 
+If not granted → ask user for permission. 
+1. System shows permission dialog. 
+2. User selects Allow or Deny. 
+3. onRequestPermissionsResult() receives result. 
+4. Based on result → show proper message. 
+How This Implements Security 
+Runtime permission: 
+• Prevents apps from accessing camera without user knowledge. 
+• Gives user full control. 
+• Improves privacy. 
+• Prevents misuse of sensitive features.
