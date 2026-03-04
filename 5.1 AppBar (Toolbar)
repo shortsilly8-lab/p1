@@ -1,5 +1,6 @@
-Practical: 5.1
-Problem Statement Design and develop an Android application that displays an AppBar (Toolbar) at the top of the screen. The AppBar should show the application title and remain visible across the application interface to provide a consistent user experience. The title of the AppBar should be updated dynamically at runtime.
+Practical: 5.1 (activity, main setSupportActionBar(toolbar);)
+Problem Statement Design and develop an Android application that displays an AppBar (Toolbar) at the top of the screen. The AppBar should show the application title and remain 
+visible across the application interface to provide a consistent user experience. The title of the AppBar should be updated dynamically at runtime.
 Project Configuration
       Project Name: DynamicAppBarDemo
 
@@ -57,7 +58,7 @@ MainActivity.java
                     super.onCreate(savedInstanceState);
                     setContentView(R.layout.activity_main);
                     // Initialize AppBar
-                    toolbar = findViewById(R.id.toolbar);
+                     
                     setSupportActionBar(toolbar);
                     // Initialize UI components
                     editTitle = findViewById(R.id.editTitle);
