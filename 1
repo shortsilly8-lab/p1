@@ -1,0 +1,277 @@
+Problem Statement – Practical 1 
+Student Profile Viewer App – A Basic Android Application Using Activities, Services, and User Interface Components 
+You are required to design and develop an Android application named Student Profile Viewer. The objective of this practical is to help students understand the basic components of 
+Android such as Activities, Services, Content Providers, basic User Interface elements, and working with an Android Virtual Device (AVD) and USB Debugging. 
+        Procedure: 
+        Open Android Studio. 
+        Click File → New → New Project. 
+        Select Empty Views Activity. 
+        Name: StudentProfileViewer 
+        Package Name: package com.example.studentprofileviewer 
+        Language: Java 
+        Minimum SDK: API 21 (Android 5.0) 
+        Click Finish. 
+        Source Code 
+        Design the Main Layout (activity_main.xml) 
+        Procedure 
+        1. In Project Explorer, go to: 
+        app → res → layout → activity_main.xml. 
+        2. Click Code tab (bottom of editor). 
+        3. Replace content with: 
+        
+activity_main.xml
+           <?xml version="1.0" encoding="utf-8"?> 
+           <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+               android:layout_width="match_parent" 
+               android:layout_height="match_parent" 
+               android:fillViewport="true"> 
+               <LinearLayout 
+                   android:layout_width="match_parent" 
+                   android:layout_height="wrap_content" 
+                   android:orientation="vertical" 
+                   android:padding="16dp"> 
+                   <!-- Student Name --> 
+                   <TextView 
+                       android:layout_width="wrap_content" 
+                       android:layout_height="wrap_content" 
+                       android:text="Student Name" 
+                       android:textStyle="bold" 
+                       android:paddingTop="8dp"/> 
+            
+                   <EditText 
+                       android:id="@+id/etName" 
+                       android:layout_width="match_parent" 
+                       android:layout_height="wrap_content" 
+                       android:hint="Enter Name" 
+                       android:inputType="textPersonName"/> 
+                   <!-- Roll Number --> 
+                   <TextView 
+                       android:layout_width="wrap_content" 
+                       android:layout_height="wrap_content" 
+                       android:text="Roll Number" 
+                       android:textStyle="bold" 
+                       android:paddingTop="8dp"/> 
+                   <EditText 
+                       android:id="@+id/etRoll" 
+                       android:layout_width="match_parent" 
+                       android:layout_height="wrap_content" 
+                       android:hint="Enter Roll Number" 
+                       android:inputType="number"/> 
+                   <!-- Course --> 
+                   <TextView 
+                       android:layout_width="wrap_content" 
+                       android:layout_height="wrap_content" 
+                       android:text="Course" 
+                       android:textStyle="bold" 
+                       android:paddingTop="8dp"/> 
+                   <EditText 
+                       android:id="@+id/etCourse" 
+                       android:layout_width="match_parent" 
+                       android:layout_height="wrap_content" 
+                       android:hint="Enter Course" 
+                       android:inputType="text"/> 
+                   <!-- Email --> 
+                   <TextView 
+                       android:layout_width="wrap_content" 
+                       android:layout_height="wrap_content" 
+                       android:text="Email" 
+                       android:textStyle="bold" 
+                       android:paddingTop="8dp"/> 
+                   <EditText 
+                       android:id="@+id/etEmail" 
+                       android:layout_width="match_parent" 
+                       android:layout_height="wrap_content" 
+                       android:hint="Enter Email" 
+                       android:inputType="textEmailAddress"/> 
+                   <!-- Button --> 
+                   <Button 
+                       android:id="@+id/btnViewProfile" 
+                       android:layout_width="match_parent" 
+                       android:layout_height="wrap_content" 
+                       android:text="View Profile" 
+                       android:paddingTop="12dp" 
+                       android:layout_marginTop="16dp"/> 
+               </LinearLayout> 
+           </ScrollView> 
+ 
+Create Profile Activity 
+Procedure 
+1. Right-click app → java → com.example.studentprofileviewer. 
+2. Select New → Activity → Empty Activity. 
+3. Name: ProfileActivity. 
+4. Click Finish. 
+ Android Studio generates ProfileActivity.java and activity_profile.xml 
+ 
+activity_profile.xml
+        <?xml version="1.0" encoding="utf-8"?> 
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+            android:layout_width="match_parent" 
+            android:layout_height="match_parent" 
+            android:orientation="vertical" 
+            android:padding="16dp"> 
+            <TextView 
+                android:id="@+id/tvName" 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:textSize="18sp" 
+                android:textStyle="bold" 
+                android:padding="8dp"/> 
+            <TextView 
+                android:id="@+id/tvRoll" 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:textSize="18sp" 
+                android:padding="8dp"/> 
+            <TextView 
+                android:id="@+id/tvCourse" 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:textSize="18sp" 
+                android:padding="8dp"/> 
+            <TextView 
+                android:id="@+id/tvEmail" 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:textSize="18sp" 
+                android:padding="8dp"/> 
+        </LinearLayout> 
+        
+Code (ProfileActivity.java) 
+        package com.example.studentprofileviewer; 
+        import android.content.Intent; 
+        import android.os.Bundle; 
+        import android.widget.TextView; 
+        import androidx.appcompat.app.AppCompatActivity; 
+         
+        public class ProfileActivity extends AppCompatActivity { 
+            TextView tvName, tvRoll, tvCourse, tvEmail; 
+            @Override 
+            protected void onCreate(Bundle savedInstanceState) { 
+                super.onCreate(savedInstanceState); 
+                setContentView(R.layout.activity_profile); 
+                // Initialize TextViews 
+                tvName = findViewById(R.id.tvName); 
+                tvRoll = findViewById(R.id.tvRoll); 
+                tvCourse = findViewById(R.id.tvCourse); 
+                tvEmail = findViewById(R.id.tvEmail); 
+                // Get data from Intent (sent from MainActivity) 
+                String name = getIntent().getStringExtra("NAME"); 
+                String roll = getIntent().getStringExtra("ROLL"); 
+                String course = getIntent().getStringExtra("COURSE"); 
+                String email = getIntent().getStringExtra("EMAIL"); 
+                // Set data to TextViews 
+                tvName.setText("Name: " + name); 
+                tvRoll.setText("Roll Number: " + roll); 
+                tvCourse.setText("Course: " + course); 
+                tvEmail.setText("Email: " + email); 
+                // Start LoggingService in background 
+                Intent serviceIntent = new Intent(this, LoggingService.class); 
+                serviceIntent.putExtra("NAME", name); 
+                serviceIntent.putExtra("ROLL", roll); 
+                startService(serviceIntent); 
+            } 
+        } 
+        
+Add Logging Service 
+Procedure 
+1. Right-click app → java → com.example.studentprofileviewer. 
+2. Select New → Java Class 
+3. Name: LoggingService. 
+4. Click Finish. 
+
+LoggingService.java
+       package com.example.studentprofileviewer; 
+        
+       import android.app.Service; 
+       import android.content.Intent; 
+       import android.os.IBinder; 
+       import android.util.Log; 
+        
+       public class LoggingService extends Service { 
+        
+           private static final String TAG = "LoggingService"; 
+        
+           @Override 
+           public void onCreate() { 
+               super.onCreate(); 
+               Log.d(TAG, "Service Created"); 
+           } 
+        
+           @Override 
+           public int onStartCommand(Intent intent, int flags, int startId) { 
+               // Get data passed from ProfileActivity 
+               String name = intent.getStringExtra("NAME"); 
+               String roll = intent.getStringExtra("ROLL"); 
+        
+               Log.d(TAG, "Profile Viewed: " + name + " (Roll: " + roll + ")"); 
+        
+               // Service runs once and stops (not sticky) 
+               return START_NOT_STICKY; 
+           } 
+        
+           @Override 
+           public void onDestroy() { 
+               super.onDestroy(); 
+               Log.d(TAG, "Service Destroyed"); 
+           } 
+        
+           @Override 
+           public IBinder onBind(Intent intent) { 
+               // Not using bound service here 
+               return null; 
+           } 
+       } 
+       
+MainActivity.java 
+        package com.example.studentprofileviewer; 
+         
+        import android.content.Intent; 
+        import android.os.Bundle; 
+        import android.widget.Button; 
+        import android.widget.EditText; 
+        import androidx.appcompat.app.AppCompatActivity; 
+         
+        public class MainActivity extends AppCompatActivity { 
+         
+            EditText etName, etRoll, etCourse, etEmail; 
+            Button btnViewProfile; 
+         
+            @Override 
+            protected void onCreate(Bundle savedInstanceState) { 
+                super.onCreate(savedInstanceState); 
+                setContentView(R.layout.activity_main); 
+         
+                etName = findViewById(R.id.etName); 
+                etRoll = findViewById(R.id.etRoll); 
+                etCourse = findViewById(R.id.etCourse); 
+                etEmail = findViewById(R.id.etEmail); 
+                btnViewProfile = findViewById(R.id.btnViewProfile); 
+         
+                btnViewProfile.setOnClickListener(v -> { 
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class); 
+                    intent.putExtra("NAME", etName.getText().toString()); 
+                    intent.putExtra("ROLL", etRoll.getText().toString()); 
+                    intent.putExtra("COURSE", etCourse.getText().toString()); 
+                    intent.putExtra("EMAIL", etEmail.getText().toString()); 
+                    startActivity(intent); 
+                }); 
+            } 
+        } 
+        
+Register Service in Manifest 
+Open AndroidManifest.xml → inside <application> add: 
+
+      <service android:name=".LoggingService" /> 
+      
+ Run and Test 
+Procedure 
+1. Connect your phone via USB (enable Developer Options → USB Debugging). 
+2. In Android Studio, click Run . 
+3. Select your device. 
+4. Enter student details → click View Profile. 
+5. ProfileActivity opens and shows details. 
+6. Open Logcat (bottom panel in Android Studio). 
+Filter by LoggingService. 
+You’ll see: 
+D/LoggingService: Service Created 
+D/LoggingService: Profile Viewed: Ramesh (Roll:
