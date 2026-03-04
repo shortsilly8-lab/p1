@@ -1,0 +1,178 @@
+Practical:3.3 Aim To create an interactive Android application that uses fragments to divide the screen into multiple sections, allowing users to input data in one fragment and display it in another fragment dynamically.
+Problem Statement Develop an Android application containing two fragments inside one activity:
+              •	Input Fragment: Accepts user input (e.g., name, message)
+              •	Display Fragment: Shows the entered input in real-time when a button is clicked.
+This demonstrates fragment interaction, dynamic UI updates, and fragment lifecycle understanding.
+
+Open Android Studio → New Project
+Select Empty Views Activity
+Project Configuration:
+Name: FragmentCommunicationApp
+Package: com.example.fragmentsapp
+Language: Java
+Minimum SDK: API 21
+Finish and wait for Gradle sync.
+
+STEP 2: Create Two Fragments
+ Fragment A (Input Fragment)
+•	Right-click java → New → Fragment → Fragment (Blank)
+•	Name: InputFragment
+•	Layout: fragment_input.xml
+•	Finish
+ 
+ Fragment B (Display Fragment)
+•	Right-click java → New → Fragment → Fragment (Blank)
+•	Name: DisplayFragment
+•	Layout: fragment_display.xml
+•	Finish
+
+STEP 3: Design Fragment Layouts
+fragment_input.xml (User Input)
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="24dp"
+                        android:gravity="center">
+                        <EditText
+                            android:id="@+id/etMessage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter your message" />
+                        <Button
+                            android:id="@+id/btnSend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Send"
+                            android:layout_marginTop="16dp" />
+                    </LinearLayout>
+
+fragment_display.xml (Display Output)
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="24dp">
+                    <TextView
+                        android:id="@+id/tvDisplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your message will appear here"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+STEP 4: activity_main.xml
+                  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+                      <FrameLayout
+                          android:id="@+id/fragment_container_input"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"/>
+                      <FrameLayout
+                          android:id="@+id/fragment_container_display"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"/>
+                  </LinearLayout>
+
+STEP 5: Write Java Code for Fragments
+InputFragment.java
+              package com.example.fragmentcommunicationapp;
+              import android.content.Context;
+              import android.os.Bundle;
+              import android.view.LayoutInflater;
+              import android.view.View;
+              import android.view.ViewGroup;
+              import android.widget.Button;
+              import android.widget.EditText;
+              import androidx.fragment.app.Fragment;
+              public class InputFragment extends Fragment {
+                  EditText etMessage;
+                  Button btnSend;
+                  OnMessageSendListener listener;
+                  public interface OnMessageSendListener {
+                      void onMessageSend(String message);
+                  }
+                  @Override
+                  public void onAttach(Context context) {
+                      super.onAttach(context);
+                      if(context instanceof OnMessageSendListener){
+                          listener = (OnMessageSendListener) context;
+                      } else {
+                          throw new RuntimeException(context.toString() + " must implement OnMessageSendListener");
+                      }
+                  }
+              
+                  @Override
+                  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                           Bundle savedInstanceState) {
+              
+                      View view = inflater.inflate(R.layout.fragment_input, container, false);
+                      etMessage = view.findViewById(R.id.etMessage);
+                      btnSend = view.findViewById(R.id.btnSend);
+              
+                      btnSend.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              String message = etMessage.getText().toString();
+                              listener.onMessageSend(message);
+                          }
+                      });
+              
+                      return view;
+                  }
+              }
+
+DisplayFragment.java
+              package com.example.fragmentcommunicationapp;
+              import android.os.Bundle;
+              import android.view.LayoutInflater;
+              import android.view.View;
+              import android.view.ViewGroup;
+              import android.widget.TextView;
+              import androidx.fragment.app.Fragment;
+              public class DisplayFragment extends Fragment {
+                  TextView tvDisplay;
+                  @Override
+                  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                           Bundle savedInstanceState) {
+                      View view = inflater.inflate(R.layout.fragment_display, container, false);
+                      tvDisplay = view.findViewById(R.id.tvDisplay);
+                      return view;
+                  }
+                  public void updateMessage(String message){
+                      tvDisplay.setText(message);
+                  }
+              }
+
+STEP 6: MainActivity.java 
+              package com.example.fragmentcommunicationapp;
+              import android.os.Bundle;
+              import androidx.appcompat.app.AppCompatActivity;
+              import androidx.fragment.app.FragmentManager;
+              import androidx.fragment.app.FragmentTransaction;
+              public class MainActivity extends AppCompatActivity implements InputFragment.OnMessageSendListener {
+                  DisplayFragment displayFragment;
+                  @Override
+                  protected void onCreate(Bundle savedInstanceState) {
+                      super.onCreate(savedInstanceState);
+                      setContentView(R.layout.activity_main);
+                      InputFragment inputFragment = new InputFragment();
+                      displayFragment = new DisplayFragment();
+                      FragmentManager fm = getSupportFragmentManager();
+                      FragmentTransaction ft = fm.beginTransaction();
+                      ft.replace(R.id.fragment_container_input, inputFragment);
+                      ft.replace(R.id.fragment_container_display, displayFragment);
+                      ft.commit();
+                  }
+                  @Override
+                  public void onMessageSend(String message) {
+                      displayFragment.updateMessage(message);
+                  }
+              }
+
+run
