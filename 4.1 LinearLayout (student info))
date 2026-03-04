@@ -1,0 +1,103 @@
+Practical No:4.1 
+Aim: To design a simple Android application using Linear Layout to display student information and understand vertical and horizontal orientation. 
+Problem Statement: Design an Android application that displays student details such as Name, Roll Number, Course, and College Name using Linear Layout. Arrange the views vertically and horizontally 
+to understand orientation. 
+
+Step 1: Create New Project 
+        Open Android Studio 
+        Click New Project 
+        Select Empty Views Activity 
+        Click Next 
+        Fill details: 
+        Name: StudentProfileLinearLayout 
+        Package: com.example.studentprofile 
+        Language: Java 
+        Click Finish 
+
+Step 2: Open Layout File 
+
+activity_main.xml 
+            <?xml version="1.0" encoding="utf-8"?> 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+                android:id="@+id/main" 
+                android:layout_width="match_parent" 
+                android:layout_height="match_parent" 
+                android:orientation="vertical" 
+                android:padding="16dp"> 
+                <!-- Title --> 
+                <TextView 
+                    android:layout_width="wrap_content" 
+                    android:layout_height="wrap_content" 
+                    android:text="Student Profile" 
+                    android:textSize="22sp" 
+                    android:textStyle="bold" 
+                    android:layout_gravity="center" 
+                    android:paddingBottom="20dp" /> 
+                <!-- Name Row --> 
+                <LinearLayout 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="Name: " 
+                        android:textStyle="bold" /> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="Nikhil" /> 
+                </LinearLayout> 
+                <!-- Roll Number Row --> 
+                <LinearLayout 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" 
+                    android:paddingTop="10dp"> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="Roll No: " 
+                        android:textStyle="bold" /> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="21MCA001" /> 
+                </LinearLayout> 
+                <!-- Course Row --> 
+                <LinearLayout 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" 
+                    android:paddingTop="10dp"> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="Course: " 
+                        android:textStyle="bold" /> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="BSc IT" /> 
+                </LinearLayout> 
+                <!-- College Row --> 
+                <LinearLayout 
+                    android:layout_width="match_parent" 
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" 
+                    android:paddingTop="10dp"> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="College: " 
+                        android:textStyle="bold" /> 
+                    <TextView 
+                        android:layout_width="wrap_content" 
+                        android:layout_height="wrap_content" 
+                        android:text="ABC Institute of Technology" /> 
+                </LinearLayout> 
+            </LinearLayout> 
+
+Step 4: MainActivity.java No changes required because: 
+
+Step 5: Run the App
