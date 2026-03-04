@@ -1,0 +1,197 @@
+7 Problem Statement:Develop an Android application for a College Event Registration system using Intents, Events, Listeners, and Adapters. The first activity should display a list of events using a ListView or RecyclerView with an Adapter. On selecting an event, the application must handle the click using a Listener and navigate to the second activity through an Intent while passing the event name. The second activity should display the selected event and contain a Register button which, on click, shows a confirmation message using Toast or AlertDialog.
+Aim:To develop an Android application that demonstrates the implementation of Intents, Events, Listeners, and Adapters by creating a College Event Registration system that enables navigation between activities, handles user interactions, and displays data using Adapter-based views.
+1. Create New Project in Android Studio
+          Steps
+          1.	Open Android Studio → New Project
+          2.	Select → Empty Activity
+          3.	Name: CollegeEventApp
+          4.	Language: Java
+          5.	Minimum SDK: 21 or above
+          6.	Finish
+
+2. Project Structure
+app
+ ├── manifests
+ │     └── AndroidManifest.xml
+ ├── java
+ │    └── com.example.collegeeventapp
+ │          ├── EventAdapter.java
+ │          ├── MainActivity.java
+ │          └── SecondActivity.java
+ ├── res
+ │    ├── drawable
+ │    ├── layout
+ │    │     ├── activity_main.xml
+ │    │     ├── activity_second.xml
+ │    │     └── list_item.xml
+ │    ├── mipmap
+ │    ├── values
+ │    └── xml
+ └── Gradle Scripts
+ 
+3. XML Layouts
+activity_main.xml
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+list_item.xml
+          <TextView
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/txtEvent"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textSize="18sp"
+              android:padding="12dp"/>
+
+activity_second.xml
+          <LinearLayout
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+              <TextView
+                  android:id="@+id/txtSelected"
+                  android:textSize="20sp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+              <Button
+                  android:id="@+id/btnRegister"
+                  android:text="Register"
+                  android:layout_marginTop="20dp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+          </LinearLayout>
+
+4. Java Code 
+(A) EventAdapter.java – ADAPTER
+              package com.example.collegeeventapp;
+              import android.content.Context;
+              import android.view.LayoutInflater;
+              import android.view.View;
+              import android.view.ViewGroup;
+              import android.widget.TextView;
+              import android.widget.BaseAdapter;
+              public class EventAdapter extends BaseAdapter {
+                  Context context;
+                  String[] events;
+                  public EventAdapter(Context context, String[] events) {
+                      this.context = context;
+                      this.events = events;
+                  }
+                  @Override
+                  public int getCount() {
+                      return events.length;
+                  }
+                  @Override
+                  public Object getItem(int i) {
+                      return events[i];
+                  }
+                  @Override
+                  public long getItemId(int i) {
+                      return i;
+                  }
+                  @Override
+                  public View getView(int i, View view, ViewGroup parent) {
+                      if(view == null) {
+                          view = LayoutInflater.from(context)
+                                  .inflate(R.layout.list_item, parent, false);
+                      }
+                      TextView txt = view.findViewById(R.id.txtEvent);
+                      txt.setText(events[i]);
+                      return view;
+                  }
+              }
+
+(B) MainActivity.java – INTENT + LISTENER
+              package com.example.collegeeventapp;
+              import android.content.Intent;
+              import android.os.Bundle;
+              import android.widget.AdapterView;
+              import android.widget.ListView;
+              import androidx.appcompat.app.AppCompatActivity;
+              public class MainActivity extends AppCompatActivity {
+                  ListView listView;
+                  String[] events = {
+                      "Coding Contest",
+                      "Technical Quiz",
+                      "Project Expo",
+                      "Workshop"
+                  };
+                  @Override
+                  protected void onCreate(Bundle savedInstanceState) {
+                      super.onCreate(savedInstanceState);
+                      setContentView(R.layout.activity_main);
+                      listView = findViewById(R.id.listView);
+                      EventAdapter adapter =
+                          new EventAdapter(this, events);
+                      listView.setAdapter(adapter);
+                      // EVENT + LISTENER
+                      listView.setOnItemClickListener(
+                          new AdapterView.OnItemClickListener() {
+                          @Override
+                          public void onItemClick(AdapterView<?> parent,
+                                  android.view.View view,
+                                  int position, long id) {
+                              // INTENT
+                              Intent i = new Intent(
+                                  MainActivity.this,
+                                  SecondActivity.class);
+                              i.putExtra("event",
+                                         events[position]);
+                              startActivity(i);
+                          }
+                      });
+                  }
+              }
+
+(C) SecondActivity.java – EVENT HANDLING
+                  package com.example.collegeeventapp;
+                  import android.os.Bundle;
+                  import android.widget.Button;
+                  import android.widget.TextView;
+                  import android.widget.Toast;
+                  import androidx.appcompat.app.AppCompatActivity;
+                  public class SecondActivity extends AppCompatActivity {
+                      TextView txt;
+                      Button btn;
+                      @Override
+                      protected void onCreate(Bundle savedInstanceState) {
+                          super.onCreate(savedInstanceState);
+                          setContentView(R.layout.activity_second);
+                          txt = findViewById(R.id.txtSelected);
+                          btn = findViewById(R.id.btnRegister);
+                          // RECEIVE INTENT DATA
+                          String event =
+                              getIntent().getStringExtra("event");
+                          txt.setText("Selected: " + event);
+                          // LISTENER EVENT
+                          btn.setOnClickListener(v ->
+                              Toast.makeText(
+                                  getApplicationContext(),
+                                  "Registered for " + event,
+                                  Toast.LENGTH_LONG
+                              ).show()
+                          );
+                      }
+                  }
+
+Concept:
+Intents – move between activities
+Events – user click actions
+Listeners – handle interactions
+Adapters – dynamic list display
+Output Flow
+1.	App shows list of events
+2.	User clicks any event
+3.	Intent opens second screen
+4.	Click Register → Toast shown
+
