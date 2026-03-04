@@ -1,0 +1,86 @@
+Practical: 5.1
+Problem Statement Design and develop an Android application that displays an AppBar (Toolbar) at the top of the screen. The AppBar should show the application title and remain visible across the application interface to provide a consistent user experience. The title of the AppBar should be updated dynamically at runtime.
+Project Configuration
+      Project Name: DynamicAppBarDemo
+
+activity_main.xml
+            <?xml version="1.0" encoding="utf-8"?>
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!-- AppBar -->
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:title="Dynamic AppBar"
+                    android:titleTextColor="@android:color/white"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
+                <!-- Main Content -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="56dp">
+                    <EditText
+                        android:id="@+id/editTitle"
+                        android:hint="Enter new AppBar title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/btnChangeTitle"
+                        android:text="Change AppBar Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            
+
+MainActivity.java
+            package com.example.dynamicappbardemo;
+            import android.os.Bundle;
+            import android.widget.Button;
+            import android.widget.EditText;
+            import androidx.appcompat.app.AppCompatActivity;
+            import androidx.appcompat.widget.Toolbar;
+            public class MainActivity extends AppCompatActivity {
+            
+                Toolbar toolbar;
+                EditText editTitle;
+                Button btnChangeTitle;
+                @Override
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    setContentView(R.layout.activity_main);
+                    // Initialize AppBar
+                    toolbar = findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
+                    // Initialize UI components
+                    editTitle = findViewById(R.id.editTitle);
+                    btnChangeTitle = findViewById(R.id.btnChangeTitle);
+                    // Dynamic AppBar title change
+                    btnChangeTitle.setOnClickListener(v -> {
+                        String newTitle = editTitle.getText().toString();
+                        if (!newTitle.isEmpty()) {
+                            getSupportActionBar().setTitle(newTitle);
+                        }
+                    });
+                }
+            }
+
+            
+Logic 
+setSupportActionBar(toolbar) converts Toolbar into AppBar
+User enters text in EditText
+Button click updates AppBar title dynamically
+AppBar remains visible throughout the app
+STEP 4: Run the Application
+1.	Click Run 
+2.	App opens with AppBar showing default title
+3.	Enter a new title
+4.	Click Change AppBar Title
+5.	AppBar title updates dynamically 
