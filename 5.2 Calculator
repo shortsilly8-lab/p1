@@ -1,0 +1,176 @@
+Prac:5.2 Aim To design and develop an Android Calculator Application that demonstrates the effective use of AppBar, Fragments, and basic UI components. The application aims to perform basic arithmetic operations based on user input handled within a fragment, while maintaining a consistent AppBar across the application interface to ensure a structured and user-friendly design.
+Problem Statement Design and develop an Android Calculator Application that demonstrates the use of AppBar, Fragments, and basic UI components. The application should perform arithmetic operations using user input handled inside a fragment, while maintaining a consistent AppBar across the application.
+Project Details
+Project Name: FragmentCalculatorApp
+
+STEP 1: Activity Layout with AppBar + Fragment Container
+activity_main.xml
+            <?xml version="1.0" encoding="utf-8"?>
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!-- AppBar -->
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:title="Fragment Calculator"
+                    android:background="?attr/colorPrimary"
+                    android:titleTextColor="@android:color/white" />
+                <!-- Fragment Container -->
+                <FrameLayout
+                    android:id="@+id/fragment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="56dp"/>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+Create Fragment
+Right click java → package
+New → Fragment → Fragment (Blank)
+Name: fragment_calculator
+Click Finish
+
+STEP 2: Calculator Fragment Layout (UI Components)
+fragment_calculator.xml
+            <?xml version="1.0" encoding="utf-8"?>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/num1"
+                    android:hint="Enter first number"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <EditText
+                    android:id="@+id/num2"
+                    android:hint="Enter second number"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+            
+                    <Button
+                        android:id="@+id/btnAdd"
+                        android:text="+"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/btnSub"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/btnMul"
+                        android:text="×"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/btnDiv"
+                        android:text="÷"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtResult"
+                    android:text="Result will appear here"
+                    android:textSize="18sp"
+                    android:paddingTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
+STEP 3: Calculator Fragment Logic 
+CalculatorFragment.java
+              package com.example.fragmentcalculatorapp;
+              import android.os.Bundle;
+              import androidx.fragment.app.Fragment;
+              import android.view.LayoutInflater;
+              import android.view.View;
+              import android.view.ViewGroup;
+              import android.widget.Button;
+              import android.widget.EditText;
+              import android.widget.TextView;
+              public class CalculatorFragment extends Fragment {
+                  EditText num1, num2;
+                  TextView txtResult;
+                  public CalculatorFragment() {}
+                  @Override
+                  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
+                  {
+              
+                      View view = inflater.inflate(R.layout.fragment_calculator, container, false);
+                      num1 = view.findViewById(R.id.num1);
+                      num2 = view.findViewById(R.id.num2);
+                      txtResult = view.findViewById(R.id.txtResult);
+                      Button btnAdd = view.findViewById(R.id.btnAdd);
+                      Button btnSub = view.findViewById(R.id.btnSub);
+                      Button btnMul = view.findViewById(R.id.btnMul);
+                      Button btnDiv = view.findViewById(R.id.btnDiv);
+                      View.OnClickListener listener = v -> calculate(v.getId());
+                      btnAdd.setOnClickListener(listener);
+                      btnSub.setOnClickListener(listener);
+                      btnMul.setOnClickListener(listener);
+                      btnDiv.setOnClickListener(listener);
+              
+                      return view;
+                  }
+                  private void calculate(int id) {
+                      double a, b;
+              
+                      if (num1.getText().toString().isEmpty() ||
+                              num2.getText().toString().isEmpty()) {
+                          txtResult.setText("Please enter both numbers");
+                          return;
+                      }
+                      a = Double.parseDouble(num1.getText().toString());
+                      b = Double.parseDouble(num2.getText().toString());
+                      double result = 0;
+                      if (id == R.id.btnAdd) result = a + b;
+                      else if (id == R.id.btnSub) result = a - b;
+                      else if (id == R.id.btnMul) result = a * b;
+                      else if (id == R.id.btnDiv) {
+                          if (b == 0) {
+                              txtResult.setText("Division by zero not allowed");
+                              return;
+                          }
+                          result = a / b;
+                      }
+                      txtResult.setText("Result: " + result);
+                  }
+              }
+              
+STEP 4: Load Fragment in Activity
+MainActivity.java
+            package com.example.fragmentcalculatorapp;
+            import android.os.Bundle;
+            import androidx.appcompat.app.AppCompatActivity;
+            import androidx.appcompat.widget.Toolbar;
+            public class MainActivity extends AppCompatActivity {
+                @Override
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    setContentView(R.layout.activity_main);
+                    Toolbar toolbar = findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
+                    if (savedInstanceState == null) {
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.fragment_container, new CalculatorFragment())
+                                .commit();
+                    }
+                }
+            }
+            
