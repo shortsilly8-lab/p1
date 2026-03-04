@@ -1,0 +1,136 @@
+Prac:3.1: Understanding Activity Life Cycle
+Problem Statement: Develop an Android application to demonstrate the Activity Life Cycle by observing life cycle method calls during different user interactions.
+Procedure:
+      Language: Java
+      Template: Empty Views Activity
+      
+STEP 1: Create a New Android Project
+            Open Android Studio
+            •	Launch Android Studio
+            •	Click New Project
+             Select Project Template
+            •	Choose Empty Views Activity
+            •	Click Next
+            Project Configuration (VERY IMPORTANT)
+            Fill the details exactly like this (you may change the name slightly if needed):
+            •	Name:
+            ActivityLifeCycleDemo
+            •	Package name:
+            com.example.activitylifecycle
+            •	Save location:
+            (Keep default)
+            •	Language:
+             Java
+            •	Minimum SDK:
+             API 21: Android 5.0 (Lollipop)
+            •	Build configuration language:
+            Groovy (default)
+            Click Finish
+            
+STEP 2: activity_mainXML
+          <?xml version="1.0" encoding="utf-8"?>
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:padding="20dp">
+              <TextView
+                  android:id="@+id/tvLifecycle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Activity Life Cycle Status"
+                  android:textSize="20sp"
+                  android:textStyle="bold" />
+          </LinearLayout>
+          
+Why This UI? (Understand Concept)
+•	LinearLayout → arranges items vertically
+•	TextView → shows which life cycle method is currently running
+•	tvLifecycle → will be updated from Java code
+
+MainActivity.java
+              package com.example.activitylifecycledemo;
+              import android.os.Bundle;
+              import android.util.Log;
+              import android.widget.TextView;
+              import androidx.appcompat.app.AppCompatActivity;
+              public class MainActivity extends AppCompatActivity {
+                  TextView tvLifecycle;
+                  String TAG = "ActivityLifeCycle";
+                  @Override
+                  protected void onCreate(Bundle savedInstanceState) {
+                      super.onCreate(savedInstanceState);
+                      setContentView(R.layout.activity_main);
+              
+                      tvLifecycle = findViewById(R.id.tvLifecycle);
+                      tvLifecycle.setText("onCreate() called");
+              
+                      Log.d(TAG, "onCreate() executed");
+                  }
+                  @Override
+                  protected void onStart() {
+                      super.onStart();
+                      tvLifecycle.setText("onStart() called");
+                      Log.d(TAG, "onStart() executed");
+                  }
+                  @Override
+                  protected void onResume() {
+                      super.onResume();
+                      tvLifecycle.setText("onResume() called");
+                      Log.d(TAG, "onResume() executed");
+                  }
+                  @Override
+                  protected void onPause() {
+                      super.onPause();
+                      Log.d(TAG, "onPause() executed");
+                  }
+                  @Override
+                  protected void onStop() {
+                      super.onStop();
+                      Log.d(TAG, "onStop() executed");
+                  }
+                  @Override
+                  protected void onDestroy() {
+                      super.onDestroy();
+                      Log.d(TAG, "onDestroy() executed");
+                  }
+              }
+              
+Understand What We Did 
+•	onCreate() → app starts
+•	onStart() → activity becomes visible
+•	onResume() → user interacts
+•	onPause() → app goes to background
+•	onStop() → app not visible
+•	onDestroy() → activity closed
+We used:
+•	TextView → to show state on screen
+•	Log.d() → to track life cycle in Logcat
+
+STEP 4: Run the App and Observe Activity Life Cycle
+Run the Application
+•	Click the ▶ Run button in Android Studio
+•	Select:
+Observe Output on Mobile Screen
+When the app opens, you will see:
+onResume() called
+(You may briefly see onCreate → onStart → onResume internally.)
+Open Logcat
+•	Bottom panel → Logcat
+•	Select:
+Device: your emulator/phone
+App: your application
+•	In search box, type:
+ActivityLifeCycle
+ Perform User Actions & Observe Life Cycle
+User Action	Life Cycle Methods Called
+Launch app	onCreate → onStart → onResume
+Press Home	onPause → onStop
+Return to app	onRestart → onStart → onResume
+Press Back	onPause → onStop → onDestroy
+(Logcat will clearly show these messages.)
+What to Capture for Output
+For practical submission, take:
+•	Screenshot of app screen
+•	Screenshot of Logcat showing life cycle logs
