@@ -1,0 +1,82 @@
+Practical:02 
+2.1: Create an Android app that defines custom colors in colors.xml and applies them to the background of a TextView 
+
+STEP 1 — Create New Project 
+1. Open Android Studio 
+2. Click New Project 
+3. Select Empty Views Activity 
+4. Click Next 
+5. Fill details: 
+      Project Name: Practical2_1_CustomColors 
+      Package Name: (auto) 
+      Language: Java 
+      Minimum SDK: API 21 
+6. Click Finish 
+Android separates reusable items into folders under res/ 
+Examples: 
+      • colors.xml → stores color definitions 
+      • strings.xml → stores text 
+      • styles.xml → themes 
+      • layout.xml → UI structure 
+This practical focuses on colors.xml 
+
+STEP 3 — Define Custom Colors in colors.xml 
+    Go to: 
+    app → res → values → colors.xml 
+    Replace everything inside with: 
+    <?xml version="1.0" encoding="utf-8"?> 
+    <resources> 
+    <color name="myBackground">#FF9800</color>   <!-- Orange --> 
+    <color name="myTextColor">#FFFFFF</color>    <!-- White --> 
+    </resources> 
+
+STEP 4 — Design the UI in activity_main.xml 
+Go to 
+app → res → layout → activity_main.xml 
+Replace with: 
+        <?xml version="1.0" encoding="utf-8"?> 
+        <LinearLayout 
+        xmlns:android="http://schemas.android.com/apk/res/android" 
+        android:orientation="vertical" 
+        android:layout_width="match_parent" 
+        android:layout_height="match_parent" 
+        android:gravity="center"> 
+        <TextView 
+        android:id="@+id/txtSample" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Hello Custom Colors!" 
+        android:textSize="24sp" 
+        android:padding="20dp" /> 
+        </LinearLayout> 
+Why not set colors here? 
+Because practical requires setting color using Java code. 
+
+STEP 5 — Write Java code in MainActivity.java 
+Go to: 
+app → java → yourpackagename → MainActivity.java 
+Replace code with: 
+        package com.example.practical2_1_customcolors; 
+        import android.os.Bundle; 
+        import android.widget.TextView; 
+        import androidx.appcompat.app.AppCompatActivity; 
+        public class MainActivity extends AppCompatActivity { 
+        @Override 
+        protected void onCreate(Bundle savedInstanceState) { 
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_main); 
+        // Step 1: Find TextView by ID 
+        TextView txt = findViewById(R.id.txtSample); 
+        // Step 2: Apply custom colors from colors.xml 
+        txt.setBackgroundColor(getResources().getColor(R.color.myBackground)); 
+        txt.setTextColor(getResources().getColor(R.color.myTextColor)); 
+        } 
+        } 
+STEP 6 — Run the App 
+1. Choose Emulator or Physical Device 
+2. Press Run ▶ 
+3. Output Expected: 
+A screen displaying: 
+Orange background TextView 
+White text inside 
+Text: Hello Custom Colors!
